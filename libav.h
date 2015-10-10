@@ -168,13 +168,45 @@ static inline int
 lav_is_thumbnail_stream(AVStream *s, uint8_t **data, int *size)
 {
 #if LIBAVFORMAT_VERSION_INT >= ((54<<16)+(6<<8))
+	AVDictionaryEntry *de;
 	if (s->disposition & AV_DISPOSITION_ATTACHED_PIC &&
 	    s->codec->codec_id == AV_CODEC_ID_MJPEG)
 	{
+		de = av_dict_get(s->metadata, "filename", NULL, 0);
+		if (de && de->value)
+		{
+			if (!(strcasecmp(de->value, "cover.jpg") == 0 ||
+				strcasecmp(de->value, "small_cover.jpg") == 0))
+				return 0;
+		}
 		if (data)
 			*data = s->attached_pic.data;
 		if (size)
 			*size = s->attached_pic.size;
+		return 1;
+	}
+#endif
+	return 0;
+}
+
+static inline int
+lav_is_thumbnail_attachment(AVStream *s, uint8_t **data, int *size)
+{
+#if LIBAVFORMAT_VERSION_INT >= ((54<<16)+(6<<8))
+	AVDictionaryEntry *de;
+	de = av_dict_get(s->metadata, "mimetype", NULL, 0);
+	if (de && de->value && strcmp(de->value, "image/jpeg") != 0)
+		return 0;
+	de = av_dict_get(s->metadata, "filename", NULL, 0);
+	if (de && de->value)
+	{
+		if (!(strcasecmp(de->value, "cover.jpg") == 0 ||
+			strcasecmp(de->value, "small_cover.jpg") == 0))
+		  return 0;
+		if (data)
+			*data = s->codec->extradata;
+		if (size)
+			*size = s->codec->extradata_size;
 		return 1;
 	}
 #endif

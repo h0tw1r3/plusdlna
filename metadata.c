@@ -694,20 +694,29 @@ GetVideoMetadata(const char *path, char *name)
 	//dump_format(ctx, 0, NULL, 0);
 	for( i=0; i<ctx->nb_streams; i++)
 	{
-		if( ctx->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO &&
-		    audio_stream == -1 )
+		switch( ctx->streams[i]->codec->codec_type )
 		{
-			audio_stream = i;
-			ac = ctx->streams[audio_stream]->codec;
-			continue;
-		}
-		else if( ctx->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO &&
-		         !lav_is_thumbnail_stream(ctx->streams[i], &m.thumb_data, &m.thumb_size) &&
-		         video_stream == -1 )
-		{
-			video_stream = i;
-			vc = ctx->streams[video_stream]->codec;
-			continue;
+			case AVMEDIA_TYPE_AUDIO:
+				if ( audio_stream == -1 )
+				{
+					audio_stream = i;
+					ac = ctx->streams[audio_stream]->codec;
+				}
+				break;
+			case AVMEDIA_TYPE_VIDEO:
+				if ( lav_is_thumbnail_stream(ctx->streams[i], &m.thumb_data, &m.thumb_size) )
+					continue;
+				if ( video_stream == -1 )
+				{
+					video_stream = i;
+					vc = ctx->streams[video_stream]->codec;
+				}
+				break;
+			case AVMEDIA_TYPE_ATTACHMENT:
+				lav_is_thumbnail_attachment(ctx->streams[i], &m.thumb_data, &m.thumb_size);
+				break;
+			default:
+				break;
 		}
 	}
 	path_cpy = strdup(path);
