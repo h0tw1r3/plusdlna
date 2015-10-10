@@ -57,7 +57,15 @@ enum upnpconfigoptions {
 	USER_ACCOUNT,			/* user account to run as */
 	FORCE_SORT_CRITERIA,		/* force sorting by a given sort criteria */
 	MAX_CONNECTIONS,		/* maximum number of simultaneous connections */
+#ifndef THUMBNAIL_CREATION
 	MERGE_MEDIA_DIRS		/* don't add an extra directory level when there are multiple media dirs */
+#else
+	MERGE_MEDIA_DIRS,		/* don't add an extra directory level when there are multiple media dirs */
+	ENABLE_THUMB,                   /* enable thumbnail generation */
+	THUMB_WIDTH,                    /* thunbnail image with */
+	THUMB_QUALITY,                  /* thumnail image quality */
+	ENABLE_THUMB_FILMSTRIP          /* film strip overlay */
+#endif
 };
 
 /* readoptionsfile()

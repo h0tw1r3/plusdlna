@@ -64,7 +64,15 @@ static const struct {
 	{ USER_ACCOUNT, "user" },
 	{ FORCE_SORT_CRITERIA, "force_sort_criteria" },
 	{ MAX_CONNECTIONS, "max_connections" },
+#ifndef THUMBNAIL_CREATION
 	{ MERGE_MEDIA_DIRS, "merge_media_dirs" }
+#else
+	{ MERGE_MEDIA_DIRS, "merge_media_dirs" },
+	{ ENABLE_THUMB, "enable_thumbnail" },
+	{ THUMB_WIDTH, "thumbnail_width" },
+	{ THUMB_QUALITY, "thumbnail_quality" },
+	{ ENABLE_THUMB_FILMSTRIP, "enable_thumbnail_filmstrip" }
+#endif
 };
 
 int

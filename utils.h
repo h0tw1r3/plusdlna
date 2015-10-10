@@ -95,5 +95,8 @@ const char *mime_to_ext(const char * mime);
 /* Others */
 int make_dir(char * path, mode_t mode);
 unsigned int DJBHash(uint8_t *data, int len);
+#ifdef THUMBNAIL_CREATION
+int rename_artcache_dir(const char * oldpath, const char * newpath);
+#endif
 
 #endif
