@@ -46,6 +46,7 @@
 #include "albumart.h"
 #include "containers.h"
 #include "log.h"
+#include "rescan.h"
 
 #if SCANDIR_CONST
 typedef const struct dirent scan_filter;
@@ -848,6 +849,13 @@ start_scanner()
 
 	av_register_all();
 	av_log_set_level(AV_LOG_PANIC);
+
+	if (rescan_db)
+	{
+		rescan_scanner();
+		return;
+	}
+
 	for( media_path = media_dirs; media_path != NULL; media_path = media_path->next )
 	{
 		int64_t id;
